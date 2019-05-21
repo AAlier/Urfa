@@ -8,8 +8,8 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.urfa"
-        minSdkVersion 15
-        targetSdkVersion 28
+        minSdkVersion 19
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -38,7 +38,7 @@ dependencies {
     def koinVersion = "1.0.2"
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
-    implementation project(":library")
+    implementation 'com.afollestad:drag-select-recyclerview:2.4.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

@@ -1,4 +1,4 @@
-package com.alamkanak.weekview;
+package com.urfa.ui.weekview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.OverScroller;
 
+import com.urfa.R;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,8 +44,8 @@ import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.ViewCompat;
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 
-import static com.alamkanak.weekview.WeekViewUtil.isSameDay;
-import static com.alamkanak.weekview.WeekViewUtil.today;
+import static com.urfa.ui.weekview.WeekViewUtil.isSameDay;
+import static com.urfa.ui.weekview.WeekViewUtil.today;
 
 /**
  * Created by Raquib-ul-Alam Kanak on 7/21/2014.
@@ -877,8 +879,13 @@ public class WeekView extends View {
 
         // Prepare the name of the event.
         SpannableStringBuilder bob = new SpannableStringBuilder();
-        if (event.getName() != null) {
+        if (!TextUtils.isEmpty(event.getName())) {
             bob.append(event.getName());
+            bob.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, bob.length(), 0);
+            bob.append(' ');
+        }
+        if (!TextUtils.isEmpty(event.getLastName())) {
+            bob.append(event.getLastName());
             bob.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, bob.length(), 0);
             bob.append(' ');
         }
@@ -1020,7 +1027,19 @@ public class WeekView extends View {
                 mFetchedPeriod = periodToFetch;
             }
         }
+        calculateEventPositions();
+    }
 
+    public void updateEvent(List<WeekViewEvent> list) {
+        List<WeekViewEvent> temp = new ArrayList(list);
+        // Clear events.
+        mEventRects.clear();
+        sortAndCacheEvents(temp);
+        calculateHeaderHeight();
+        calculateEventPositions();
+    }
+
+    private void calculateEventPositions() {
         // Prepare to calculate positions of each events.
         List<EventRect> tempEvents = mEventRects;
         mEventRects = new ArrayList<EventRect>();
@@ -1589,8 +1608,8 @@ public class WeekView extends View {
      * <b>Note:</b> Use {@link #setDateTimeInterpreter(DateTimeInterpreter)} instead.
      * </p>
      *
-     * @param length Supported values are {@link com.alamkanak.weekview.WeekView#LENGTH_SHORT} and
-     *               {@link com.alamkanak.weekview.WeekView#LENGTH_LONG}.
+     * @param length Supported values are {@link com.urfa.ui.weekview.WeekView#LENGTH_SHORT} and
+     *               {@link com.urfa.ui.weekview.WeekView#LENGTH_LONG}.
      */
     @Deprecated
     public void setDayNameLength(int length) {
@@ -2049,7 +2068,7 @@ public class WeekView extends View {
 
     public interface EventLongPressListener {
         /**
-         * Similar to {@link com.alamkanak.weekview.WeekView.EventClickListener} but with a long press.
+         * Similar to {@link com.urfa.ui.weekview.WeekView.EventClickListener} but with a long press.
          *
          * @param event:     event clicked.
          * @param eventRect: view containing the clicked event.
@@ -2068,7 +2087,7 @@ public class WeekView extends View {
 
     public interface EmptyViewLongPressListener {
         /**
-         * Similar to {@link com.alamkanak.weekview.WeekView.EmptyViewClickListener} but with long press.
+         * Similar to {@link com.urfa.ui.weekview.WeekView.EmptyViewClickListener} but with long press.
          *
          * @param time: {@link Calendar} object set with the date and time of the long pressed position on the view.
          */

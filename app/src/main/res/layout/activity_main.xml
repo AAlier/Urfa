@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
 
-   <!-- <com.alamkanak.weekview.WeekView
+    <com.urfa.ui.weekview.WeekView
         android:id="@+id/weekView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,6 +22,6 @@
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#1848adff"
         app:headerColumnBackground="#ffffffff"
-        app:todayHeaderTextColor="@color/accent" />-->
+        app:todayHeaderTextColor="@color/accent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

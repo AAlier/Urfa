@@ -1,4 +1,4 @@
-package com.alamkanak.weekview;
+package com.urfa.ui.weekview;
 
 import java.util.Calendar;
 

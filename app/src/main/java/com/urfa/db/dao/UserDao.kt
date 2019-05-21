@@ -3,12 +3,12 @@ package com.urfa.db.dao
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Query
-import com.urfa.model.UserEntity
-import java.util.*
+import com.urfa.ui.weekview.WeekViewEvent
 
 @Dao
-interface UserDao : EntityWithAutoincrementDao<UserEntity> {
+interface UserDao : EntityWithAutoincrementDao<WeekViewEvent> {
 
-    @Query("SELECT * FROM user WHERE schedule BETWEEN :startDate AND :endDate")
-    fun findAllGroupsDataSource(startDate: Date, endDate: Date): DataSource.Factory<Int, UserEntity>
+    @Query("SELECT * FROM user")
+    fun findAllGroupsDataSource(
+    ): DataSource.Factory<Int, WeekViewEvent>
 }

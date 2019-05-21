@@ -2,7 +2,13 @@
     <string name="app_name">Юрфа</string>
     <string name="user_list">Список пользователей</string>
     <string name="user_add">Добавить пользователя</string>
+    <string name="hint_birth_date">День рождение</string>
+    <string name="hint_end_date">Конец сеанса</string>
     <string name="hint_enter_surname">Фамилие</string>
     <string name="hint_enter_name">Имя</string>
+    <string name="hint_start_date">Начало сеанса</string>
     <string name="error">Неизвестная ошибка</string>
+    <string name="share">Поделиться</string>
+
+
 </resources>

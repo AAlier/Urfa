@@ -7,11 +7,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.urfa.db.dao.UserDao
-import com.urfa.model.UserEntity
+import com.urfa.ui.weekview.WeekViewEvent
 
 @Database(
     entities = [
-        UserEntity::class
+        WeekViewEvent::class
     ],
     version = 1,
     exportSchema = true

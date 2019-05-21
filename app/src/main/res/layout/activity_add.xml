@@ -17,11 +17,11 @@
             android:hint="@string/hint_enter_surname"
             app:layout_constraintBottom_toTopOf="@id/lastnameTextInput"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias=".1"
+            app:layout_constraintVertical_bias="0"
             tools:ignore="MissingConstraints">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/firstnameEditText"
+                android:id="@+id/surnameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:imeOptions="actionNext"
@@ -34,12 +34,12 @@
             android:id="@+id/lastnameTextInput"
             style="@style/LoginSocialNetworkBtn"
             android:hint="@string/hint_enter_name"
-            app:layout_constraintBottom_toTopOf="@+id/addButton"
+            app:layout_constraintBottom_toTopOf="@+id/birthDateTextView"
             app:layout_constraintTop_toBottomOf="@+id/firstnameTextInput"
             tools:ignore="MissingConstraints">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/surnameFanEditText"
+                android:id="@+id/nameFanEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:imeOptions="actionDone"
@@ -47,6 +47,34 @@
                 android:maxLength="100" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <include
+            android:id="@+id/birthDateTextView"
+            style="@style/LoginSocialNetworkBtn"
+            layout="@layout/view_date_picker"
+            android:hint="@string/hint_birth_date"
+            app:layout_constraintBottom_toTopOf="@+id/startDateTextView"
+            app:layout_constraintTop_toBottomOf="@+id/lastnameTextInput"
+            tools:ignore="MissingConstraints" />
+
+        <include
+            android:id="@+id/startDateTextView"
+            style="@style/LoginSocialNetworkBtn"
+            layout="@layout/view_date_picker"
+            android:hint="@string/hint_start_date"
+            app:layout_constraintBottom_toTopOf="@+id/endDateTextView"
+            app:layout_constraintTop_toBottomOf="@+id/birthDateTextView"
+            tools:ignore="MissingConstraints" />
+
+
+        <include
+            android:id="@+id/endDateTextView"
+            style="@style/LoginSocialNetworkBtn"
+            layout="@layout/view_date_picker"
+            android:hint="@string/hint_end_date"
+            app:layout_constraintBottom_toTopOf="@+id/addButton"
+            app:layout_constraintTop_toBottomOf="@+id/startDateTextView"
+            tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/addButton"

@@ -1,10 +1,15 @@
 package com.urfa.ui.list
 
+import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.urfa.model.UserEntity
+import com.afollestad.dragselectrecyclerview.DragSelectReceiver
+import com.urfa.ui.weekview.WeekViewEvent
 
-class Adapter(val list: List<UserEntity>) : RecyclerView.Adapter<UserViewHolder>() {
+class Adapter(
+    var list: List<WeekViewEvent>
+) : RecyclerView.Adapter<UserViewHolder>(){
+    private var selectedIndices = SparseArray<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         return UserViewHolder(parent)
@@ -12,6 +17,7 @@ class Adapter(val list: List<UserEntity>) : RecyclerView.Adapter<UserViewHolder>
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind(list.get(position))
+        holder.isIndexSelected(isSelected(position))
     }
 
     override fun onViewRecycled(holder: UserViewHolder) {
@@ -23,4 +29,18 @@ class Adapter(val list: List<UserEntity>) : RecyclerView.Adapter<UserViewHolder>
         return list.size
     }
 
+    fun update(list: List<WeekViewEvent>) {
+        this.list = list
+        notifyDataSetChanged()
+    }
+
+    private fun isSelected(index: Int): Boolean {
+        // return true if this index is currently selected
+        return selectedIndices.indexOfKey(index) > -1
+    }
+
+    fun updateSelection(selectedIndices: SparseArray<Int>) {
+        this.selectedIndices = selectedIndices
+        notifyDataSetChanged()
+    }
 }

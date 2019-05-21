@@ -6,12 +6,16 @@ import java.util.*
 class Converters {
 
     @TypeConverter
-    fun fromTimestamp(value: Long?): Date? {
-        return if (value == null) null else Date(value)
+    fun fromTimeStamp(value: Long?): Calendar? {
+        return if (value == null) null else {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = value
+            calendar
+        }
     }
 
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
+    fun dateToTimestamp(date: Calendar?): Long? {
+        return date?.timeInMillis
     }
 }
