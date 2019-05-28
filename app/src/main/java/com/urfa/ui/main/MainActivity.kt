@@ -13,7 +13,7 @@ import com.urfa.R
 import com.urfa.ui.add.AddUserActivity
 import com.urfa.ui.base.BaseActivity
 import com.urfa.ui.list.ListUserActivity
-import com.urfa.util.monthTimeFormatter
+import com.urfa.util.timeFormatter
 import com.urfa.util.observeNonNull
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,9 +47,9 @@ class MainActivity : BaseActivity(), MainNavigation {
                 val date = dialog.findViewById<TextView>(R.id.date)
                 name.text = "${event.name} ${event.lastName}"
                 date.text =
-                    "${monthTimeFormatter.format(event.startTime.timeInMillis)}" +
+                    "${timeFormatter.format(event.startTime.timeInMillis)}" +
                             "-" +
-                            "${monthTimeFormatter.format(event.endTime.timeInMillis)}"
+                            "${timeFormatter.format(event.endTime.timeInMillis)}"
                 dialog.show()
             }
         }
