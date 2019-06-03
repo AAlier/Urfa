@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Юрфа</string>
-    <string name="user_list">Список пользователей</string>
+    <string name="user_list">Пользователи</string>
     <string name="user_add">Добавить пользователя</string>
     <string name="hint_birth_date">День рождение</string>
     <string name="hint_end_date">Конец сеанса</string>
@@ -9,6 +9,20 @@
     <string name="hint_start_date">Начало сеанса</string>
     <string name="error">Неизвестная ошибка</string>
     <string name="share">Поделиться</string>
-
-
+    <string name="attach_file">Прикрепить файл</string>
+    <string name="error_reading_file">Не удалось найти файл</string>
+    <string name="new_file_added">Открыть файл</string>
+    <string name="image">Фотографии</string>
+    <string name="camera">Камера</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_selected">Удалить %s</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="loading">Подождите, идёт загрузка</string>
+    <string name="rationale_camera_permission">Уважаемый пользователь камера необходима для захвата изображения</string>
+    <string name="rationale_external_storage_permission">Уважаемый пользователь, без доступа к внешнему накопителю, вы не сможете выбрать изображение из галереи</string>
+    <string name="singular_selected">выбранный элемент</string>
+    <string name="plural_selected">выбранные элементы</string>
+    <string name="reception_date">Дата приёма: %s</string>
+    <string name="reception_time">Время приёма: %s</string>
 </resources>

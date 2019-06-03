@@ -86,7 +86,7 @@ public class WeekView extends View {
     private Paint mTodayHeaderTextPaint;
     private Paint mEventBackgroundPaint;
     private float mHeaderColumnWidth;
-    private List<EventRect> mEventRects;
+    private List<EventRect> mEventRects = new ArrayList<>();
     private List<? extends WeekViewEvent> mPreviousPeriodEvents;
     private List<? extends WeekViewEvent> mCurrentPeriodEvents;
     private List<? extends WeekViewEvent> mNextPeriodEvents;
@@ -104,11 +104,11 @@ public class WeekView extends View {
     private int mMinimumFlingVelocity = 0;
     private int mScaledTouchSlop = 0;
     // Attributes and their default values.
-    private int mHourHeight = 50;
+    private int mHourHeight = 150;
     private int mNewHourHeight = -1;
     private int mMinHourHeight = 0; //no minimum specified (will be dynamic, based on screen)
     private int mEffectiveMinHourHeight = mMinHourHeight; //compensates for the fact that you can't keep zooming out.
-    private int mMaxHourHeight = 250;
+    private int mMaxHourHeight = 500;
     private int mColumnGap = 10;
     private int mFirstDayOfWeek = Calendar.MONDAY;
     private int mTextSize = 12;
@@ -163,7 +163,7 @@ public class WeekView extends View {
 
         @Override
         public boolean onDown(MotionEvent e) {
-            goToNearestOrigin();
+            forceFinishScroll();
             return true;
         }
 
@@ -973,7 +973,7 @@ public class WeekView extends View {
 
         // Get more events if the month is changed.
         if (mEventRects == null)
-            mEventRects = new ArrayList<EventRect>();
+            mEventRects = new ArrayList<>();
         if (mWeekViewLoader == null && !isInEditMode())
             throw new IllegalStateException("You must provide a MonthChangeListener");
 

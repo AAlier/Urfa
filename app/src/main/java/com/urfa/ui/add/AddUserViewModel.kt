@@ -18,10 +18,14 @@ class AddUserViewModel(private val database: AppDatabase) : BaseViewModel<AddUse
 
     fun getStartDayCalendar() = newUser.value?.startTime ?: Calendar.getInstance()
 
-    fun getEndDayCalendar() = newUser.value?.endTime ?: Calendar.getInstance()
+    fun getEndDayCalendar() : Calendar {
+        val date = Calendar.getInstance()
+        date.add(Calendar.MINUTE, 10)
+        return newUser.value?.endTime ?: date
+    }
 
     fun saveUser() {
-        if(getStartDayCalendar().compareTo(getEndDayCalendar()) != -1) {
+        if (getStartDayCalendar().compareTo(getEndDayCalendar()) != -1) {
             getNavigation()?.onError("Дата должна быть логичной")
             return
         }
@@ -31,10 +35,16 @@ class AddUserViewModel(private val database: AppDatabase) : BaseViewModel<AddUse
                 database.getUserDao().insert(it)
                 getNavigation()?.onSuccessSavingUser()
                 getNavigation()?.hideProgressBar()
-            } ?: kotlin.run {
+            } ?: run {
                 getNavigation()?.onError("Данные не могут быть пустыми")
                 getNavigation()?.hideProgressBar()
             }
         }.start()
+    }
+
+    fun addUri(uri: String) {
+        val event = newUser.value ?: WeekViewEvent()
+        event.filePath = uri
+        newUser.postValue(event)
     }
 }

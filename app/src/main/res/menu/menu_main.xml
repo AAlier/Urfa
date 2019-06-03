@@ -4,19 +4,13 @@
 
     <item
         android:id="@+id/itemOne"
-        android:icon="@drawable/one"
+        android:icon="@mipmap/ic_one"
         android:title="@string/user_add"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/itemFive"
-        android:icon="@drawable/five"
-        android:title="@string/user_add"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/itemAdd"
-        android:icon="@drawable/ic_add"
+        android:id="@+id/itemSix"
+        android:icon="@mipmap/ic_six"
         android:title="@string/user_add"
         app:showAsAction="always" />
 

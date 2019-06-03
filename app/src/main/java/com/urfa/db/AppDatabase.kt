@@ -13,7 +13,7 @@ import com.urfa.ui.weekview.WeekViewEvent
     entities = [
         WeekViewEvent::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

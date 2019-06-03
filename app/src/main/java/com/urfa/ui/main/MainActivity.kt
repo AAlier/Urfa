@@ -13,8 +13,7 @@ import com.urfa.R
 import com.urfa.ui.add.AddUserActivity
 import com.urfa.ui.base.BaseActivity
 import com.urfa.ui.list.ListUserActivity
-import com.urfa.util.monthTimeFormatter
-import com.urfa.util.observeNonNull
+import com.urfa.util.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,6 +36,7 @@ class MainActivity : BaseActivity(), MainNavigation {
     }
 
     private fun setupListener() {
+        weekView.goToHour(8.0)
         weekView.setMonthChangeListener { newYear, newMonth ->
             viewModel.updateFilter(newYear, newMonth)
             return@setMonthChangeListener mutableListOf()
@@ -45,17 +45,20 @@ class MainActivity : BaseActivity(), MainNavigation {
             if (!dialog.isShowing) {
                 val name = dialog.findViewById<TextView>(R.id.username)
                 val date = dialog.findViewById<TextView>(R.id.date)
+                val time = dialog.findViewById<TextView>(R.id.time)
                 name.text = "${event.name} ${event.lastName}"
-                date.text =
-                    "${monthTimeFormatter.format(event.startTime.timeInMillis)}" +
-                            "-" +
-                            "${monthTimeFormatter.format(event.endTime.timeInMillis)}"
+                date.text = getString(R.string.reception_date, "${monthFormatter.format(event.startTime.timeInMillis)}")
+                time.text = getString(R.string.reception_time, "${timeFormatter.format(event.startTime.timeInMillis)}-${timeFormatter.format(event.endTime.timeInMillis)}")
                 dialog.show()
             }
         }
 
         weekView.setEmptyViewClickListener {
             startActivity(AddUserActivity.newInstance(this, it))
+        }
+
+        addUserButton.setOnDelayedClickListener {
+            startActivity(Intent(this, AddUserActivity::class.java))
         }
     }
 
@@ -72,7 +75,7 @@ class MainActivity : BaseActivity(), MainNavigation {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_list_users, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -80,14 +83,11 @@ class MainActivity : BaseActivity(), MainNavigation {
         if (item == null)
             return false
         when (item.itemId) {
-            R.id.itemFive -> {
-                weekView.numberOfVisibleDays = 5
+            R.id.itemSix -> {
+                weekView.numberOfVisibleDays = 6
             }
             R.id.itemOne -> {
                 weekView.numberOfVisibleDays = 1
-            }
-            R.id.itemAdd -> {
-                startActivity(Intent(this, AddUserActivity::class.java))
             }
             R.id.itemShowAll -> {
                 startActivity(Intent(this, ListUserActivity::class.java))

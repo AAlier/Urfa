@@ -1,22 +1,44 @@
 package com.urfa.ui.base
 
+import android.app.ProgressDialog
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.urfa.R
 
 abstract class BaseActivity : AppCompatActivity() {
-
-    fun showProgressBar(){
-
+    private val progressBar by lazy {
+        val progressBar = ProgressDialog(this)
+        progressBar.setMessage(getString(R.string.loading))
+        progressBar.setCancelable(false)
+        progressBar
     }
 
-    fun hideProgressBar(){
-
+    fun showProgressBar() {
+        runOnUiThread {
+            progressBar.show()
+        }
     }
 
-    fun onError(error: String?){
-        Snackbar.make(findViewById(android.R.id.content), error ?: getString(R.string.error), Snackbar.LENGTH_LONG).show()
+    fun hideProgressBar() {
+        runOnUiThread {
+            progressBar.hide()
+        }
+    }
+
+    fun onError(error: String?) {
+        runOnUiThread {
+            Snackbar.make(
+                findViewById(android.R.id.content),
+                error ?: getString(R.string.error),
+                Snackbar.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        hideProgressBar()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
