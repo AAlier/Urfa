@@ -9,8 +9,9 @@
         android:id="@+id/pickerHintView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textStyle="italic"
         android:orientation="vertical"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tools:text="34567890-" />
 
     <LinearLayout
@@ -24,9 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:textSize="16sp"
+            android:textSize="18sp"
             tools:text="234r5t" />
 
         <TextView
@@ -35,9 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:textSize="16sp"
+            android:textSize="18sp"
             tools:text="234r5t" />
     </LinearLayout>
 
