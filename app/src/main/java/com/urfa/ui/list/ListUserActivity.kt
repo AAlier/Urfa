@@ -1,47 +1,36 @@
 package com.urfa.ui.list
 
 import android.content.Intent
-import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import com.urfa.R
-import com.urfa.ui.base.BaseActivity
+import com.urfa.ui.BasePickUserActivity
+import com.urfa.ui.search.SearchActivity
 import com.urfa.util.observeNonNull
-import kotlinx.android.synthetic.main.activity_user_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
-class ListUserActivity : BaseActivity(), ListNavigation, Listener {
+class ListUserActivity : BasePickUserActivity(), ListNavigation {
     private val viewModel: ListViewModel by viewModel()
-    private val adapter = Adapter(ArrayList(), this)
     private var deleteMenuItem: MenuItem? = null
     private var shareMenuItem: MenuItem? = null
-    var headersDecorator: StickyRecyclerHeadersDecoration = StickyRecyclerHeadersDecoration(adapter)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_list)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupViewModel()
-        setupRecyclerView()
     }
 
     private fun setupViewModel() {
         viewModel.setNavigation(this)
         viewModel.users.observeNonNull(this) {
-            adapter.update(it)
+            updateAdapter(it)
         }
         viewModel.selectedIndices.observe(this, Observer {
             it?.let {
-                adapter.updateSelection(it)
+                updateSelected(it)
             }
             deleteMenuItem?.isVisible = it != null && it.isNotEmpty()
             shareMenuItem?.isVisible = it != null && it.isNotEmpty()
@@ -50,19 +39,8 @@ class ListUserActivity : BaseActivity(), ListNavigation, Listener {
         viewModel.updateFilter(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH))
     }
 
-    private fun setupRecyclerView() {
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.addItemDecoration(headersDecorator)
-
-        val itemDecoration = DividerItemDecoration(recyclerView.context, layoutManager.orientation)
-        recyclerView.addItemDecoration(itemDecoration)
-        recyclerView.adapter = adapter
-    }
-
     override fun onSelect(adapterPosition: Int) {
-        val event = adapter.getItem(adapterPosition)
-        viewModel.updateSelectedId(adapterPosition, event)
+        viewModel.updateSelectedId(adapterPosition, getItem(adapterPosition))
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -80,6 +58,9 @@ class ListUserActivity : BaseActivity(), ListNavigation, Listener {
         if (item == null)
             return false
         when (item.itemId) {
+            R.id.itemSearch -> {
+                startActivity(Intent(this, SearchActivity::class.java))
+            }
             R.id.itemShare -> {
                 share()
             }
@@ -98,7 +79,8 @@ class ListUserActivity : BaseActivity(), ListNavigation, Listener {
     }
 
     private fun alertDelete() {
-        val message = if(viewModel.isSingular()) getString(R.string.singular_selected) else getString(R.string.plural_selected)
+        val message =
+            if (viewModel.isSingular()) getString(R.string.singular_selected) else getString(R.string.plural_selected)
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.delete))
             .setMessage(getString(R.string.delete_selected, message))

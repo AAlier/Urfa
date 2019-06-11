@@ -1,6 +1,8 @@
 package com.urfa.ui.main
 
 import android.app.Dialog
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -9,15 +11,20 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import com.urfa.R
 import com.urfa.ui.add.AddUserActivity
 import com.urfa.ui.base.BaseActivity
 import com.urfa.ui.list.ListUserActivity
-import com.urfa.util.*
+import com.urfa.util.monthFormatter
+import com.urfa.util.observeNonNull
+import com.urfa.util.setOnDelayedClickListener
+import com.urfa.util.timeFormatter
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(), MainNavigation {
+
     private val viewModel: MainViewModel by viewModel()
     private val dialog by lazy { initDialog() }
 
@@ -47,8 +54,16 @@ class MainActivity : BaseActivity(), MainNavigation {
                 val date = dialog.findViewById<TextView>(R.id.date)
                 val time = dialog.findViewById<TextView>(R.id.time)
                 name.text = "${event.name} ${event.lastName}"
-                date.text = getString(R.string.reception_date, "${monthFormatter.format(event.startTime.timeInMillis)}")
-                time.text = getString(R.string.reception_time, "${timeFormatter.format(event.startTime.timeInMillis)}-${timeFormatter.format(event.endTime.timeInMillis)}")
+                date.text = getString(
+                    R.string.reception_date,
+                    "${monthFormatter.format(event.startTime.timeInMillis)}"
+                )
+                time.text = getString(
+                    R.string.reception_time,
+                    "${timeFormatter.format(event.startTime.timeInMillis)}-${timeFormatter.format(
+                        event.endTime.timeInMillis
+                    )}"
+                )
                 dialog.show()
             }
         }

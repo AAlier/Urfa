@@ -163,6 +163,7 @@ public class WeekView extends View {
 
         @Override
         public boolean onDown(MotionEvent e) {
+            mScroller.forceFinished(true);
             forceFinishScroll();
             return true;
         }
@@ -652,9 +653,10 @@ public class WeekView extends View {
 
             // Get more events if necessary. We want to store the events 3 months beforehand. Get
             // events only when it is the first iteration of the loop.
-            if (mEventRects == null || mRefreshEvents ||
-                    (dayNumber == leftDaysWithGaps + 1 && mFetchedPeriod != (int) mWeekViewLoader.toWeekViewPeriodIndex(day) &&
-                            Math.abs(mFetchedPeriod - mWeekViewLoader.toWeekViewPeriodIndex(day)) > 0.5)) {
+            double period = mWeekViewLoader.toWeekViewPeriodIndex(day);
+            if (mWeekViewLoader != null && (mEventRects == null || mRefreshEvents ||
+                    (dayNumber == leftDaysWithGaps + 1 && mFetchedPeriod != (int) period &&
+                            Math.abs(mFetchedPeriod - period) > 0.5))) {
                 getMoreEvents(day);
                 mRefreshEvents = false;
             }
@@ -1148,6 +1150,10 @@ public class WeekView extends View {
         for (List<EventRect> collisionGroup : collisionGroups) {
             expandEventsToMaxWidth(collisionGroup);
         }
+    }
+
+    public void searchFor(@Nullable  String query) {
+
     }
 
     /**

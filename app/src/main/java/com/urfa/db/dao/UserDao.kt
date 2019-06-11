@@ -18,4 +18,7 @@ interface UserDao : EntityWithAutoincrementDao<WeekViewEvent> {
 
     @Query("DELETE FROM user WHERE id IN (:list)")
     fun delete(list: Set<Long>)
+
+    @Query("SELECT * FROM user WHERE username LIKE '%' || :query || '%' OR :query IS NULL")
+    fun findUserByNameDataSource(query: String? = null): DataSource.Factory<Int, WeekViewEvent>
 }

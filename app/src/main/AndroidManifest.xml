@@ -21,14 +21,24 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <activity
             android:name=".ui.list.ListUserActivity"
-            android:label="@string/user_list"/>
+            android:label="@string/user_list">
+
+        </activity>
+
         <activity android:name=".ui.add.AddUserActivity"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".ui.ImageViewActivity" />
+        <activity android:name=".ui.search.SearchActivity" >
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable">
+            </meta-data>
+        </activity>
 
         <provider
             android:name=".util.GenericFileProvider"

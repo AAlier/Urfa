@@ -25,4 +25,5 @@
     <string name="plural_selected">выбранные элементы</string>
     <string name="reception_date">Дата приёма: %s</string>
     <string name="reception_time">Время приёма: %s</string>
+    <string name="search">Поиск</string>
 </resources>
