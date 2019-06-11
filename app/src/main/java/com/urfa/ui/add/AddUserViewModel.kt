@@ -33,7 +33,7 @@ class AddUserViewModel(private val database: AppDatabase) : BaseViewModel<AddUse
             getNavigation()?.showProgressBar()
             newUser.value?.let {
                 database.getUserDao().insert(it)
-                getNavigation()?.onSuccessSavingUser()
+                getNavigation()?.onSuccessSavingUser(it)
                 getNavigation()?.hideProgressBar()
             } ?: run {
                 getNavigation()?.onError("Данные не могут быть пустыми")

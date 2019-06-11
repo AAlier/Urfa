@@ -16,11 +16,16 @@ import com.urfa.R
 import com.urfa.ui.add.AddUserActivity
 import com.urfa.ui.base.BaseActivity
 import com.urfa.ui.list.ListUserActivity
+import com.urfa.ui.search.SearchActivity
+import com.urfa.ui.weekview.WeekViewEvent
 import com.urfa.util.monthFormatter
 import com.urfa.util.observeNonNull
 import com.urfa.util.setOnDelayedClickListener
 import com.urfa.util.timeFormatter
 import kotlinx.android.synthetic.main.activity_main.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(), MainNavigation {
@@ -68,7 +73,7 @@ class MainActivity : BaseActivity(), MainNavigation {
             }
         }
 
-        weekView.setEmptyViewClickListener {
+        weekView.setEmptyViewLongPressListener {
             startActivity(AddUserActivity.newInstance(this, it))
         }
 
@@ -98,6 +103,9 @@ class MainActivity : BaseActivity(), MainNavigation {
         if (item == null)
             return false
         when (item.itemId) {
+            R.id.itemSearch -> {
+                startActivity(Intent(this, SearchActivity::class.java))
+            }
             R.id.itemSix -> {
                 weekView.numberOfVisibleDays = 6
             }
@@ -109,5 +117,21 @@ class MainActivity : BaseActivity(), MainNavigation {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onScrollToEvent(event: WeekViewEvent) {
+        weekView?.goToDayHour(event.startTime)
+        EventBus.getDefault().removeStickyEvent(event)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 }

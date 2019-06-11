@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView
 import com.urfa.R
 import com.urfa.ui.BasePickUserActivity
 import com.urfa.util.observeNonNull
+import org.greenrobot.eventbus.EventBus
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : BasePickUserActivity(), SearchNavigation, SearchView.OnQueryTextListener {
@@ -45,6 +46,11 @@ class SearchActivity : BasePickUserActivity(), SearchNavigation, SearchView.OnQu
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         return false
+    }
+
+    override fun onSelect(adapterPosition: Int) {
+        EventBus.getDefault().postSticky(getItem(adapterPosition))
+        super.onBackPressed()
     }
 
 }

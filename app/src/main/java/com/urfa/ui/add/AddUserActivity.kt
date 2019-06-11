@@ -16,6 +16,7 @@ import com.urfa.ui.weekview.WeekViewEvent
 import com.urfa.util.*
 import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.view_date_picker.view.*
+import org.greenrobot.eventbus.EventBus
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.util.*
@@ -94,8 +95,8 @@ class AddUserActivity : ReadFileActivity(), AddUserNavigation {
         }
     }
 
-    override fun onSuccessSavingUser() {
-        onError("Success saving")
+    override fun onSuccessSavingUser(event: WeekViewEvent) {
+        EventBus.getDefault().postSticky(event)
         this.finish()
     }
 

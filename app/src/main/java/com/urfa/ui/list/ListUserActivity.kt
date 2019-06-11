@@ -10,6 +10,7 @@ import com.urfa.R
 import com.urfa.ui.BasePickUserActivity
 import com.urfa.ui.search.SearchActivity
 import com.urfa.util.observeNonNull
+import org.greenrobot.eventbus.EventBus
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -44,8 +45,8 @@ class ListUserActivity : BasePickUserActivity(), ListNavigation {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        deleteMenuItem = menu?.getItem(0)
-        shareMenuItem = menu?.getItem(1)
+        deleteMenuItem = menu?.getItem(1)
+        shareMenuItem = menu?.getItem(2)
         return super.onPrepareOptionsMenu(menu)
     }
 

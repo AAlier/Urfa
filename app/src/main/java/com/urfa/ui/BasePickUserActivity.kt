@@ -35,10 +35,6 @@ abstract class BasePickUserActivity : BaseActivity() , Listener {
         recyclerView.adapter = adapter
     }
 
-    override fun onSelect(adapterPosition: Int) {
-
-    }
-
     fun updateAdapter(it: PagedList<WeekViewEvent>) {
         adapter.update(it)
     }

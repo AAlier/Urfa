@@ -101,14 +101,14 @@ public class WeekView extends View {
     private Calendar mLastVisibleDay;
     private boolean mShowFirstDayOfWeekFirst = false;
     private int mDefaultEventColor;
-    private int mMinimumFlingVelocity = 0;
+    private int mMinimumFlingVelocity = 5;
     private int mScaledTouchSlop = 0;
     // Attributes and their default values.
     private int mHourHeight = 150;
     private int mNewHourHeight = -1;
     private int mMinHourHeight = 0; //no minimum specified (will be dynamic, based on screen)
     private int mEffectiveMinHourHeight = mMinHourHeight; //compensates for the fact that you can't keep zooming out.
-    private int mMaxHourHeight = 500;
+    private int mMaxHourHeight = 800;
     private int mColumnGap = 10;
     private int mFirstDayOfWeek = Calendar.MONDAY;
     private int mTextSize = 12;
@@ -122,15 +122,15 @@ public class WeekView extends View {
     private int mFutureBackgroundColor = Color.rgb(245, 245, 245);
     private int mPastWeekendBackgroundColor = 0;
     private int mFutureWeekendBackgroundColor = 0;
-    private int mNowLineColor = Color.rgb(102, 102, 102);
-    private int mNowLineThickness = 5;
+    private int mNowLineColor = Color.RED;
+    private int mNowLineThickness = 10;
     private int mHourSeparatorColor = Color.rgb(230, 230, 230);
     private int mTodayBackgroundColor = Color.rgb(239, 247, 254);
     private int mHourSeparatorHeight = 2;
     private int mTodayHeaderTextColor = Color.rgb(39, 137, 228);
     private int mEventTextSize = 12;
     private int mEventTextColor = Color.BLACK;
-    private int mEventPadding = 8;
+    private int mEventPadding = 4;
     private int mHeaderColumnBackgroundColor = Color.WHITE;
     private boolean mIsFirstDraw = true;
     private boolean mAreDimensionsInvalid = true;
@@ -142,9 +142,9 @@ public class WeekView extends View {
     private Calendar mScrollToDay = null;
     private double mScrollToHour = -1;
     private int mEventCornerRadius = 0;
-    private boolean mShowDistinctWeekendColor = false;
-    private boolean mShowNowLine = false;
-    private boolean mShowDistinctPastFutureColor = false;
+    private boolean mShowDistinctWeekendColor = true;
+    private boolean mShowNowLine = true;
+    private boolean mShowDistinctPastFutureColor = true;
     private boolean mHorizontalFlingEnabled = true;
     private boolean mVerticalFlingEnabled = true;
     private int mAllDayEventHeight = 100;
@@ -164,7 +164,6 @@ public class WeekView extends View {
         @Override
         public boolean onDown(MotionEvent e) {
             mScroller.forceFinished(true);
-            forceFinishScroll();
             return true;
         }
 
@@ -465,6 +464,9 @@ public class WeekView extends View {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 mNewHourHeight = Math.round(mHourHeight * detector.getScaleFactor());
+                int newEventSize = mNewHourHeight / 10;
+                mEventTextSize = (newEventSize < 2 ? 2 : (newEventSize > 25 ? 25 : newEventSize));
+                mEventTextPaint.setTextSize(mEventTextSize);
                 invalidate();
                 return true;
             }
@@ -485,7 +487,7 @@ public class WeekView extends View {
         mTimeTextWidth = 0;
         for (int i = 0; i < 24; i++) {
             // Measure time string and get max width.
-            String time = getDateTimeInterpreter().interpretTime(i);
+            String time = getDateTimeInterpreter().interpretTime(i, 0);
             if (time == null)
                 throw new IllegalStateException("A DateTimeInterpreter must not return null time");
             mTimeTextWidth = Math.max(mTimeTextWidth, mTimeTextPaint.measureText(time));
@@ -541,12 +543,16 @@ public class WeekView extends View {
         for (int i = 0; i < 24; i++) {
             float top = mHeaderHeight + mHeaderRowPadding * 2 + mCurrentOrigin.y + mHourHeight * i + mHeaderMarginBottom;
 
+
             // Draw the text if its y position is not outside of the visible area. The pivot point of the text is the point at the bottom-right corner.
-            String time = getDateTimeInterpreter().interpretTime(i);
-            if (time == null)
-                throw new IllegalStateException("A DateTimeInterpreter must not return null time");
-            if (top < getHeight())
-                canvas.drawText(time, mTimeTextWidth + mHeaderColumnPadding, top + mTimeTextHeight, mTimeTextPaint);
+            if (top < getHeight()) {
+                String time_00 = getDateTimeInterpreter().interpretTime(i + 8, 0);
+                canvas.drawText(time_00, mTimeTextWidth + mHeaderColumnPadding, top + mTimeTextHeight, mTimeTextPaint);
+                String time_20 = getDateTimeInterpreter().interpretTime(i + 8, 20);
+                String time_40 = getDateTimeInterpreter().interpretTime(i + 8, 40);
+                canvas.drawText(time_20, mTimeTextWidth + mHeaderColumnPadding, top + mTimeTextHeight + mHourHeight * 1 / 3, mTimeTextPaint);
+                canvas.drawText(time_40, mTimeTextWidth + mHeaderColumnPadding, top + mTimeTextHeight + mHourHeight * 2 / 3, mTimeTextPaint);
+            }
         }
     }
 
@@ -1152,7 +1158,7 @@ public class WeekView extends View {
         }
     }
 
-    public void searchFor(@Nullable  String query) {
+    public void searchFor(@Nullable String query) {
 
     }
 
@@ -1347,13 +1353,21 @@ public class WeekView extends View {
                 }
 
                 @Override
-                public String interpretTime(int hour) {
+                public String interpretTime(int hour, int minute) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(Calendar.HOUR_OF_DAY, hour);
-                    calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.MINUTE, minute);
 
                     try {
-                        SimpleDateFormat sdf = DateFormat.is24HourFormat(getContext()) ? new SimpleDateFormat("HH:mm", Locale.getDefault()) : new SimpleDateFormat("hh a", Locale.getDefault());
+                        if(minute != 0){
+                            SimpleDateFormat sdf = DateFormat.is24HourFormat(getContext()) ?
+                                    new SimpleDateFormat("  :mm", Locale.getDefault()) :
+                                    new SimpleDateFormat("  :aa", Locale.getDefault());
+                            return sdf.format(calendar.getTime());
+                        }
+                        SimpleDateFormat sdf = DateFormat.is24HourFormat(getContext()) ?
+                                new SimpleDateFormat("HH:mm", Locale.getDefault()) :
+                                new SimpleDateFormat("hh a", Locale.getDefault());
                         return sdf.format(calendar.getTime());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -2013,6 +2027,32 @@ public class WeekView extends View {
         mCurrentOrigin.x = -dateDifference * (mWidthPerDay + mColumnGap);
         invalidate();
     }
+
+    public void goToDayHour(Calendar date) {
+        mScroller.forceFinished(true);
+        mCurrentScrollDirection = mCurrentFlingDirection = Direction.NONE;
+
+        mRefreshEvents = false;
+        double hour = date.get(Calendar.HOUR_OF_DAY);
+        int verticalOffset = 0;
+        if (hour > 24)
+            verticalOffset = mHourHeight * 24;
+        else if (hour > 0)
+            verticalOffset = (int) (mHourHeight * hour);
+
+        if (verticalOffset > mHourHeight * 24 - getHeight() + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom)
+            verticalOffset = (int) (mHourHeight * 24 - getHeight() + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom);
+
+        Calendar today = Calendar.getInstance();
+        long day = 1000L * 60L * 60L * 24L;
+        long dateInMillis = date.getTimeInMillis() + date.getTimeZone().getOffset(date.getTimeInMillis());
+        long todayInMillis = today.getTimeInMillis() + today.getTimeZone().getOffset(today.getTimeInMillis());
+        long dateDifference = (dateInMillis / day) - (todayInMillis / day);
+        mCurrentOrigin.x = -dateDifference * (mWidthPerDay + mColumnGap);
+        mCurrentOrigin.y = -verticalOffset;
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+
 
     /**
      * Refreshes the view and loads the events again.
