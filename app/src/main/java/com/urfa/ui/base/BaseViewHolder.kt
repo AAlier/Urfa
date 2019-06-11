@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class BaseViewHolder<T>(
     @LayoutRes
     layout: Int,
-    parent: ViewGroup
+    parent: ViewGroup?
 ) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parent.context).inflate(layout, parent, false)
+    LayoutInflater.from(parent?.context).inflate(layout, parent, false)
 ) {
 
     abstract fun bind(item: T)

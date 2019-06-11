@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.urfa">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".UrfaApplication"
         android:allowBackup="true"
@@ -22,7 +26,19 @@
         <activity
             android:name=".ui.list.ListUserActivity"
             android:label="@string/user_list"/>
-        <activity android:name=".ui.add.AddUserActivity" />
+        <activity android:name=".ui.add.AddUserActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name=".ui.ImageViewActivity" />
+
+        <provider
+            android:name=".util.GenericFileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path"/>
+        </provider>
     </application>
 
 </manifest>

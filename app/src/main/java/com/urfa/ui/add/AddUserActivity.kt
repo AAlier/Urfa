@@ -9,17 +9,19 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
+import android.view.View
 import com.urfa.R
-import com.urfa.ui.base.BaseActivity
+import com.urfa.ui.base.ReadFileActivity
 import com.urfa.ui.weekview.WeekViewEvent
 import com.urfa.util.*
 import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.view_date_picker.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 import java.util.*
 
-class AddUserActivity : BaseActivity(), AddUserNavigation {
-    private val viewModel: AddUserViewModel by viewModel<AddUserViewModel>()
+class AddUserActivity : ReadFileActivity(), AddUserNavigation {
+    private val viewModel: AddUserViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,7 @@ class AddUserActivity : BaseActivity(), AddUserNavigation {
     private fun setupViewModel() {
         viewModel.setNavigation(this)
         viewModel.newUser.observeNonNull(this) {
-            addButton.isEnabled = !TextUtils.isEmpty(it.name) && !TextUtils.isEmpty(it.lastName)
+            addButton.visibility = if(!TextUtils.isEmpty(it.name) && !TextUtils.isEmpty(it.lastName)) View.VISIBLE else View.GONE
             startDateTextView.timeTextView.text = timeFormatter.format(it.startTime.timeInMillis)
             endDateTextView.timeTextView.text = timeFormatter.format(it.endTime.timeInMillis)
             birthDateTextView.timeTextView.text = timeFormatter.format(it.birthDate.timeInMillis)
@@ -51,6 +53,8 @@ class AddUserActivity : BaseActivity(), AddUserNavigation {
             endDateTextView.dateTextView.text = monthFormatter.format(it.endTime.timeInMillis)
             birthDateTextView.dateTextView.text =
                 monthFormatter.format(it.birthDate.timeInMillis)
+            fileAttachedTextView.visibility =
+                if (TextUtils.isEmpty(it.filePath) || !File(it.filePath).exists()) View.GONE else View.VISIBLE
         }
     }
 
@@ -79,6 +83,14 @@ class AddUserActivity : BaseActivity(), AddUserNavigation {
         setupTimePickerListener()
         addButton.setOnDelayedClickListener {
             viewModel.saveUser()
+        }
+        attachButton.setOnDelayedClickListener {
+            showChooserDialog()
+        }
+        fileAttachedTextView.setOnDelayedClickListener {
+            viewModel.newUser.value?.filePath?.let { path ->
+                openFromGallery(path)
+            }
         }
     }
 
@@ -135,7 +147,7 @@ class AddUserActivity : BaseActivity(), AddUserNavigation {
             this,
             android.R.style.Theme_Holo_Light_Dialog_MinWidth,
             listener,
-            calendar.get(Calendar.HOUR),
+            calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
             true
         )
@@ -193,6 +205,10 @@ class AddUserActivity : BaseActivity(), AddUserNavigation {
             user.endTime.set(Calendar.MINUTE, minute)
             viewModel.newUser.postValue(user)
         }
+
+    override fun onReceiveImageFile(path: String) {
+        viewModel.addUri(path)
+    }
 
     companion object {
         fun newInstance(context: Context, startDate: Calendar): Intent {

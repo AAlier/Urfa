@@ -3,9 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/itemDelete"
+        android:icon="@drawable/ic_delete"
+        android:title="@string/delete"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/itemShare"
         android:icon="@drawable/ic_share"
         android:title="@string/share"
+        android:visible="false"
         app:showAsAction="always" />
 
 </menu>

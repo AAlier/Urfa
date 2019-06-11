@@ -1,18 +1,35 @@
 package com.urfa.ui.list
 
-import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.afollestad.dragselectrecyclerview.DragSelectReceiver
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 import com.urfa.ui.weekview.WeekViewEvent
+import com.urfa.util.monthFormatter
+import java.util.concurrent.CopyOnWriteArrayList
 
 class Adapter(
-    var list: List<WeekViewEvent>
-) : RecyclerView.Adapter<UserViewHolder>(){
-    private var selectedIndices = SparseArray<Int>()
+    private var list: List<WeekViewEvent>,
+    private val listener: Listener
+) : RecyclerView.Adapter<UserViewHolder>(),
+    StickyRecyclerHeadersAdapter<HeaderHolder> {
+    override fun getHeaderId(position: Int): Long {
+        return getHeaderFor(position)?.hashCode()?.toLong() ?: 0
+    }
+
+    private fun getHeaderFor(position: Int): String? {
+        return monthFormatter.format(list.get(position).startTime.timeInMillis)
+    }
+
+    override fun onCreateHeaderViewHolder(parent: ViewGroup?) = HeaderHolder(parent)
+
+    override fun onBindHeaderViewHolder(holder: HeaderHolder?, position: Int) {
+        getHeaderFor(position)?.let { holder?.bind(it) }
+    }
+
+    private var selectedIndices = CopyOnWriteArrayList<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        return UserViewHolder(parent)
+        return UserViewHolder(parent, listener)
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
@@ -35,12 +52,12 @@ class Adapter(
     }
 
     private fun isSelected(index: Int): Boolean {
-        // return true if this index is currently selected
-        return selectedIndices.indexOfKey(index) > -1
+        return selectedIndices.indexOf(index) > -1
     }
 
-    fun updateSelection(selectedIndices: SparseArray<Int>) {
+    fun updateSelection(selectedIndices: CopyOnWriteArrayList<Int>) {
         this.selectedIndices = selectedIndices
-        notifyDataSetChanged()
     }
+
+    fun getItem(adapterPosition: Int): WeekViewEvent = list.get(adapterPosition)
 }
